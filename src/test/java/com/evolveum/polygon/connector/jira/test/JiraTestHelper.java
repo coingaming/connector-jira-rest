@@ -89,9 +89,9 @@ public class JiraTestHelper {
 	protected JiraConfiguration getConfiguration() {
 		JiraConfiguration config = new JiraConfiguration();
 		config.setBaseUrl(baseUrl);
-		config.setUsername(adminUsername);
+		config.setEmailAddress(adminUsername);
 		GuardedString passwd = new GuardedString(adminPassword.toCharArray());
-		config.setPassword(passwd);
+		//config.setPassword(passwd);
 		return config;
 	}
 

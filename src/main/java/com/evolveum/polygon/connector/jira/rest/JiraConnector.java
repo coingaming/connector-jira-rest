@@ -84,7 +84,7 @@ public class JiraConnector implements TestOp, SchemaOp, Connector, CreateOp, Del
 	public void test() {
 		LOG.info("Testing connection...");
 		JiraObjectsProcessing objectProcessing = new JiraObjectsProcessing(configuration);
-		objectProcessing.testConnetion(configuration.getUsername());
+		objectProcessing.testConnetion(configuration.getEmailAddress());
 		LOG.ok("Testing finished successfully.");
 	}
 

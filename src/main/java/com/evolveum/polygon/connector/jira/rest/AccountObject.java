@@ -265,7 +265,7 @@ public class AccountObject extends JiraObjectsProcessing {
 				request = new HttpPost(uri.build());
 			} else {
 				// update:
-				uri.addParameter(PARAM_KEY, uid.getUidValue());
+				uri.addParameter(PARAM_ACCOUNT_ID, uid.getUidValue());
 				request = new HttpPut(uri.build());
 			}
 			// execute request only when response body is not empty (not when
@@ -274,7 +274,7 @@ public class AccountObject extends JiraObjectsProcessing {
 				// LOG.info("\n\tbody is not empty: {0} - {1}", body.length(),
 				// body.toString());
 				JSONObject jo = callRequest(request, body, true, CONTENT_TYPE_JSON);
-				responseUid = jo.getString(ATTR_KEY);
+				responseUid = jo.getString(ATTR_ACCOUNT_ID);
 			}
 
 			// create or update user including attribute avatar:
@@ -302,7 +302,7 @@ public class AccountObject extends JiraObjectsProcessing {
 		URIBuilder uri = getURIBuilder();
 		uri.setPath(URI_BASE_PATH + URI_USER_PATH + URI_PASSWORD_PATH);
 		HttpEntityEnclosingRequestBase request;
-		uri.addParameter(PARAM_KEY, uid.getUidValue());
+		uri.addParameter(PARAM_ACCOUNT_ID, uid.getUidValue());
 		try {
 			request = new HttpPut(uri.build());
 			body.put(ATTR_PASSWORD, password);
@@ -328,32 +328,6 @@ public class AccountObject extends JiraObjectsProcessing {
 			handleUserObjects(objectsArray, handler, options, false);
 		} else
 
-		// get user by username:
-		if (query instanceof EqualsFilter && ((EqualsFilter) query).getAttribute() instanceof Name) {
-			Name name = (Name) ((EqualsFilter) query).getAttribute();
-			if (name != null) {
-				try {
-					// getUri = getURIBuilder();
-					getUri.setPath(URI_BASE_PATH + URI_USER_PATH);
-					getUri.addParameter(PARAM_USERNAME, name.getNameValue());
-					getUri.addParameter(ATTR_EXPAND, ATTR_GROUPS);
-					getUri.addParameter(ATTR_EXPAND, ATTR_APPLICAION_ROLES);
-					request = new HttpGet(getUri.build());
-					JSONObject user = callRequest(request, true, CONTENT_TYPE_JSON);
-					ConnectorObject connectorObject = convertUserToConnectorObject(user, true);
-					handler.handle(connectorObject);
-				} catch (URISyntaxException e) {
-					StringBuilder exceptionMsg = new StringBuilder();
-					exceptionMsg.append("Get operation failed: problem occurred during executing URI: ").append(getUri)
-							.append(", using name attribute: ").append(name).append("\n\t")
-							.append(e.getLocalizedMessage());
-					LOG.error(exceptionMsg.toString());
-					throw new ConnectorException(exceptionMsg.toString());
-				}
-			} else
-				throwNullAttrException(query);
-		} else
-
 		// get user by uid:
 		if (query instanceof EqualsFilter && ((EqualsFilter) query).getAttribute() instanceof Uid) {
 			Uid uid = (Uid) ((EqualsFilter) query).getAttribute();
@@ -361,7 +335,7 @@ public class AccountObject extends JiraObjectsProcessing {
 				try {
 					// getUri = getURIBuilder();
 					getUri.setPath(URI_BASE_PATH + URI_USER_PATH);
-					getUri.addParameter(UID, uid.getUidValue());
+					getUri.addParameter(ATTR_ACCOUNT_ID, uid.getUidValue());
 					getUri.addParameter(ATTR_EXPAND, ATTR_GROUPS);
 					getUri.addParameter(ATTR_EXPAND, ATTR_APPLICAION_ROLES);
 					request = new HttpGet(getUri.build());
@@ -378,20 +352,21 @@ public class AccountObject extends JiraObjectsProcessing {
 				}
 			} else
 				throwNullAttrException(query);
-		} else
+		}
 		// search users using startsWith filter:
-		if (query instanceof StartsWithFilter) {
+		else if (query instanceof StartsWithFilter) {
 			attr = ((StartsWithFilter) query).getAttribute();
 			JSONArray filteredArray = startsWithFiltering(query, attr, options, ObjectClass.ACCOUNT_NAME);
 			handleUserObjects(filteredArray, handler, options, true);
-		} else
+		}
 		// search users using containsFilter, but in fact it is
 		// startsWithFilter because Jira does not allow ContainsFilter:
-		if (query instanceof ContainsFilter) {
+		else if (query instanceof ContainsFilter) {
 			attr = ((ContainsFilter) query).getAttribute();
 			JSONArray filteredArray = startsWithFiltering(query, attr, options, ObjectClass.ACCOUNT_NAME);
 			handleUserObjects(filteredArray, handler, options, true);
-		} else {
+		}
+		else {
 			StringBuilder exceptionMsg = new StringBuilder();
 			exceptionMsg.append("\n\tUnsuported query filter for Account Object Class '").append(query)
 					.append("' or its attribute name '").append(((AttributeFilter) query).getAttribute().getName())
@@ -407,9 +382,7 @@ public class AccountObject extends JiraObjectsProcessing {
 		JSONArray users = new JSONArray(), allUsers = new JSONArray();
 		Boolean isPaginationRequested = false;
 		int usersPerPage = 50, startAt = 0;
-		getUri.setPath(URI_BASE_PATH + URI_USER_PATH + URI_SEARCH_PATH);
-		// if want to get all user use parameter '.'
-		getUri.addParameter(PARAM_USERNAME, PARAM_GET_ALL_USERS);
+		getUri.setPath(URI_BASE_PATH + URI_USERS_PATH + URI_SEARCH_PATH);
 		try {
 			if (options.getPagedResultsOffset() != null || options.getPageSize() != null) {
 				isPaginationRequested = true;
@@ -491,14 +464,8 @@ public class AccountObject extends JiraObjectsProcessing {
 
 		ConnectorObjectBuilder builder = new ConnectorObjectBuilder();
 
-		getUidIfExists(user, ATTR_KEY, builder);
-		getNameIfExists(user, ATTR_NAME, builder);
-		// if (user.has(ATTR_KEY)) {
-		// builder.setUid(new Uid(user.getString(ATTR_KEY)));
-		// }
-		// if (user.has(ATTR_NAME)) {
-		// builder.setName(new Name(user.getString(ATTR_NAME)));
-		// }
+		getUidIfExists(user, ATTR_ACCOUNT_ID, builder);
+		getNameIfExists(user, ATTR_EMAILADDRESS, builder);
 
 		getIfExists(user, ATTR_PASSWORD, builder, IS_SINGLE_VALUE);
 		getIfExists(user, ATTR_DISPLAY_NAME, builder, IS_SINGLE_VALUE);
@@ -552,7 +519,7 @@ public class AccountObject extends JiraObjectsProcessing {
 	}
 
 	void deleteUser(Uid uid) {
-		URIBuilder deleteUri = getURIBuilder().setPath(URI_BASE_PATH + URI_USER_PATH).addParameter(PARAM_KEY,
+		URIBuilder deleteUri = getURIBuilder().setPath(URI_BASE_PATH + URI_USER_PATH).addParameter(PARAM_ACCOUNT_ID,
 				uid.getUidValue());
 		// LOG.ok("delete user, Uid: {0}", uid);
 		HttpDelete request;

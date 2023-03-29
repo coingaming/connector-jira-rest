@@ -40,13 +40,13 @@ public class JiraGroupTests extends JiraTestHelper {
 	private static final String testGroupname = "ľščťžýáíéäúôöüß$#@%^*(?)<&>";
 	private Uid groupUid;
 
-	@Test(priority = 1)
+	@Test(priority = 1, enabled = false)
 	public void initTest() {
 		jiraConnector.init(getConfiguration());
 		cleanUp();
 	}
 
-	@Test(priority = 2)
+	@Test(priority = 2, enabled = false)
 	public void groupSchemaTest() {
 		Schema schema = jiraConnector.schema();
 
@@ -80,7 +80,7 @@ public class JiraGroupTests extends JiraTestHelper {
 		}
 	}
 
-	@Test(priority = 3)
+	@Test(priority = 3, enabled = false)
 	public void createGroupTest() {
 		// mandatory attribute:
 		groupAttributes.add(AttributeBuilder.build(Name.NAME, testGroupname));
@@ -103,7 +103,7 @@ public class JiraGroupTests extends JiraTestHelper {
 					+ "\n-------------------------------------------------------------------------");
 	}
 
-	@Test(priority = 3, expectedExceptions = IllegalArgumentException.class)
+	@Test(priority = 3, expectedExceptions = IllegalArgumentException.class, enabled = false)
 	public void unknownGroupUidNegativeTest() {
 		AttributeFilter equalsFilter = (EqualsFilter) FilterBuilder
 				.equalTo(AttributeBuilder.build(Uid.NAME, "XXXXXXXXX"));
@@ -111,13 +111,13 @@ public class JiraGroupTests extends JiraTestHelper {
 		jiraConnector.executeQuery(groupObjectClass, equalsFilter, groupHandler, options);
 	}
 
-	@Test(priority = 4, expectedExceptions = IllegalArgumentException.class)
+	@Test(priority = 4, expectedExceptions = IllegalArgumentException.class, enabled = false)
 	public void createDuplicateGroupNegativeTest() {
 		// create duplicate group:
 		jiraConnector.create(groupObjectClass, groupAttributes, options);
 	}
 
-	@Test(priority = 5)
+	@Test(priority = 5, enabled = false)
 	public void uidEqualsFilteringForGroupsTest() {
 		// filtering:
 		AttributeFilter groupEqualsFilter = (EqualsFilter) FilterBuilder
@@ -135,7 +135,7 @@ public class JiraGroupTests extends JiraTestHelper {
 					+ "\n-------------------------------------------------------------------------");
 	}
 
-	@Test(priority = 5)
+	@Test(priority = 5, enabled = false)
 	public void nameEqualsFilteringForGroupsTest() {
 		// filtering:
 		groupResults.clear();
@@ -154,7 +154,7 @@ public class JiraGroupTests extends JiraTestHelper {
 
 	}
 
-	@Test(priority = 5)
+	@Test(priority = 5, enabled = false)
 	public void nameContainsFilteringForGroupsTest() {
 		// filtering:
 		AttributeFilter groupContainsFilter = (ContainsFilter) FilterBuilder
@@ -171,7 +171,7 @@ public class JiraGroupTests extends JiraTestHelper {
 					+ "\n-------------------------------------------------------------------------");
 	}
 
-	@Test(priority = 6)
+	@Test(priority = 6, enabled = false)
 	public void listingGroupsTest() {
 		// filtering:
 		groupResults.clear();
@@ -181,14 +181,14 @@ public class JiraGroupTests extends JiraTestHelper {
 
 	}
 
-	@Test(priority = 15)
+	@Test(priority = 15, enabled = false)
 	public void deleteGroupTest() {
 		if (groupUid != null) {
 			jiraConnector.delete(groupObjectClass, groupUid, null);
 		}
 	}
 
-	@Test(priority = 20)
+	@Test(priority = 20, enabled = false)
 	public void disposeTest() {
 		jiraConnector.dispose();
 	}

@@ -18,6 +18,7 @@ package com.evolveum.polygon.connector.jira.rest;
 import org.identityconnectors.common.StringUtil;
 import org.identityconnectors.common.logging.Log;
 import org.identityconnectors.common.security.GuardedString;
+import org.identityconnectors.common.security.SecurityUtil;
 import org.identityconnectors.framework.common.exceptions.ConfigurationException;
 import org.identityconnectors.framework.spi.AbstractConfiguration;
 import org.identityconnectors.framework.spi.ConfigurationProperty;
@@ -31,8 +32,8 @@ public class JiraConfiguration extends AbstractConfiguration implements Stateful
 	
 	private static final Log LOG = Log.getLog(JiraConfiguration.class);
 
-	private String name;
-	private GuardedString password;
+	private String emailAddress;
+	private GuardedString accessToken;
 	private String baseUrl;
 	
 	// getter and setter methods for "baseUrl" attribute:
@@ -46,46 +47,34 @@ public class JiraConfiguration extends AbstractConfiguration implements Stateful
 		}
 
 	// getter and setter methods for "name" attribute:
-	@ConfigurationProperty(order = 2, displayMessageKey = "username.display", helpMessageKey = "username.help", required = true, confidential = false)
-	public String getUsername() {
-		/*if (name == null || name.isEmpty()){
-			String exceptionMsg = "Name is not provided";
-			LOG.error(exceptionMsg.toString());
-			throw new InvalidCredentialException(exceptionMsg);
-		}*/
-		return name;
+	@ConfigurationProperty(order = 2, displayMessageKey = "emailAddress.display", helpMessageKey = "emailAddress.help", required = true, confidential = false)
+	public String getEmailAddress() {
+		return emailAddress;
 	}
 
-	public void setUsername(String name) {
-		this.name = name;
+	public void setEmailAddress(String name) {
+		this.emailAddress = name;
+	}
+	
+	@ConfigurationProperty(
+			order = 3,
+			displayMessageKey = "token.display",
+			helpMessageKey = "token.help",
+			required = true,
+			confidential = false
+	)
+	public GuardedString getAccessToken() {
+		return accessToken;
+	}
+	public void setAccessToken(GuardedString accessToken) {
+		this.accessToken = accessToken;
 	}
 
-	private String stringPassword = "";
-	// getter and setter methods for "password" attribute:
-	@ConfigurationProperty(order = 3, displayMessageKey = "password.display", helpMessageKey = "password.help", required = true, confidential = false)
-	public GuardedString getPassword() {
-		return password;
+	//convert GuardedString access token to String access token
+	public String getAccessTokenPlainText() {
+		return SecurityUtil.decrypt(accessToken);
 	}
-	public void setPassword(GuardedString password) {
-		this.password = password;
-	}
-	
-	//convert GuardedString passwd to String passwd
-	public String getStringPassword() {
-		/*if (password == null || "".equals(password)){
-			String exceptionMsg = "Password is not provided";
-			LOG.error(exceptionMsg.toString());
-			throw new InvalidPasswordException(exceptionMsg);
-		}*/
-		password.access(new GuardedString.Accessor() {
-			@Override
-			public void access(char[] clearChars) {
-				stringPassword = new String(clearChars);
-			}
-		});
-		return stringPassword;
-	}
-	
+
 	@Override
 	public void validate() {
 
@@ -96,17 +85,16 @@ public class JiraConfiguration extends AbstractConfiguration implements Stateful
 			LOG.error(exceptionMsg.toString());
 			throw new ConfigurationException(exceptionMsg);
 		}
-		if (name == null || StringUtil.isBlank(name)) {
+		if (emailAddress == null || StringUtil.isBlank(emailAddress)) {
 			exceptionMsg = "Name is not provided.";
 			LOG.error(exceptionMsg.toString());
 			throw new ConfigurationException(exceptionMsg);
 		}
-		if (password == null || "".equals(password)) {
-			exceptionMsg = "Password is not provided.";
+		if (accessToken == null) {
+			exceptionMsg = "Access token is not provided.";
 			LOG.error(exceptionMsg.toString());
 			throw new ConfigurationException(exceptionMsg);
 		}
-
 		LOG.info("Configuration id valid.");
 	}
 	
@@ -114,15 +102,15 @@ public class JiraConfiguration extends AbstractConfiguration implements Stateful
 	public void release() {
 		LOG.info("The release of configuration resources is being performed");
 
-		this.password = null;
-		this.name = null;
+		this.accessToken = null;
+		this.emailAddress = null;
 		this.baseUrl = null;
 	}
 	
 	@Override
 	public String toString() {
 		return "JiraConnectorConfiguration{" +
-				"username='" + name + '\'' +
+				"emailAddress='" + emailAddress + '\'' +
 				", baseUrl='" + baseUrl + '\'' +
 				'}';
 	}

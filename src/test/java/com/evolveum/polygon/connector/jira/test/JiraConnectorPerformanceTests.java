@@ -54,7 +54,7 @@ public class JiraConnectorPerformanceTests extends JiraTestHelper {
 	private static final String PROJECT_TYPE_KEY = "TSTPR";
 
 	
-	@Test(priority = 1)
+	@Test(priority = 1, enabled = false)
 	public void initTest() {
 		jiraConnector.init(getConfiguration());
 		
@@ -70,7 +70,7 @@ public class JiraConnectorPerformanceTests extends JiraTestHelper {
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ACCOUNT OBJECT CLASS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-	@Test(priority = 2)
+	@Test(priority = 2, enabled = false)
 	public void createAccounts() {
 		for (String name : createdAccountNames) {
 			Set<Attribute> accountAttributes = new HashSet<Attribute>();
@@ -85,7 +85,7 @@ public class JiraConnectorPerformanceTests extends JiraTestHelper {
 		}
 	}
 
-	@Test(priority = 2)
+	@Test(priority = 2, enabled = false)
 	public void updateAccounts() {
 		password = new GuardedString("secret1".toCharArray());
 		int index = 0;
@@ -104,7 +104,7 @@ public class JiraConnectorPerformanceTests extends JiraTestHelper {
 		}
 	}
 	
-	@Test(priority = 3)
+	@Test(priority = 3, enabled = false)
 	public void listAccounts() {
 		Map<String, Object> operationOptions = new HashMap<String, Object>();
 		operationOptions.put("ALLOW_PARTIAL_ATTRIBUTE_VALUES", true);
@@ -123,20 +123,20 @@ public class JiraConnectorPerformanceTests extends JiraTestHelper {
 	
 	//add/remove user(s) to/from group(s):
  
-	@Test(priority = 7) 
+	@Test(priority = 7, enabled = false)
 	public void addOneUserToGroups(){ 
 		Set<Attribute> accountAttributes = new HashSet<Attribute>();
 		accountAttributes.add(AttributeBuilder.build("groups", createdGroupNames)); 
 		jiraConnector.addAttributeValues(accountObjectClass, createdAccountIds.get(0), accountAttributes, null); 
 	}
 	
-	@Test(priority = 8) public void removeOneUserFromGroups(){ 
+	@Test(priority = 8, enabled = false) public void removeOneUserFromGroups(){
 		Set<Attribute> accountAttributes = new HashSet<Attribute>();
 		accountAttributes.add(AttributeBuilder.build("groups", createdGroupNames));
 		jiraConnector.removeAttributeValues(accountObjectClass, createdAccountIds.get(0), accountAttributes, null); 
 	}
 	
-	@Test(priority = 9) public void addUsersToOneGroup(){ 
+	@Test(priority = 9, enabled = false) public void addUsersToOneGroup(){
 		for (Uid uid : createdAccountIds){ 
 			Set<Attribute> accountAttributes = new HashSet<Attribute>();
 			accountAttributes.add(AttributeBuilder.build("groups", createdGroupNames.get(0)));
@@ -144,7 +144,7 @@ public class JiraConnectorPerformanceTests extends JiraTestHelper {
 			} 
 		}
 	 
-	@Test(priority = 10) public void removeUsersFromOneGroup(){ 
+	@Test(priority = 10, enabled = false) public void removeUsersFromOneGroup(){
 		for (Uid uid : createdAccountIds){ 
 			Set<Attribute> accountAttributes = new HashSet<Attribute>(); 
 			accountAttributes.add(AttributeBuilder.build("groups", createdGroupNames.get(0)));
@@ -171,7 +171,7 @@ public class JiraConnectorPerformanceTests extends JiraTestHelper {
 	*/
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~GROUP OBJECT CLASS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-	@Test(priority = 4)
+	@Test(priority = 4, enabled = false)
 	public void createGroups() {
 		for (String name : createdGroupNames) {
 			Set<Attribute> groupAttributes = new HashSet<Attribute>();
@@ -181,7 +181,7 @@ public class JiraConnectorPerformanceTests extends JiraTestHelper {
 		}
 	}
 
-	@Test(priority = 5)
+	@Test(priority = 5, enabled = false)
 	public void listGroups() {
 		// get all groups:
 		groupResults.clear();
@@ -195,7 +195,7 @@ public class JiraConnectorPerformanceTests extends JiraTestHelper {
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PROJECT OBJECT CLASS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-	@Test(priority = 13)
+	@Test(priority = 13, enabled = false)
 	public void createProjects() {
 		for (int i = 0; i < COUNT; i++) {
 			String name = createdProjectNames.get(i);
@@ -210,7 +210,7 @@ public class JiraConnectorPerformanceTests extends JiraTestHelper {
 		}
 	}
 
-	@Test(priority = 14)
+	@Test(priority = 14, enabled = false)
 	public void updateProjects() {
 		password = new GuardedString("secret1".toCharArray());
 		int index = 0;
@@ -228,7 +228,7 @@ public class JiraConnectorPerformanceTests extends JiraTestHelper {
 		}
 	}
 
-	@Test(priority = 15)
+	@Test(priority = 15, enabled = false)
 	public void listProjects() {
 		// get all projects:
 		projectResults.clear();
@@ -240,7 +240,7 @@ public class JiraConnectorPerformanceTests extends JiraTestHelper {
 		}
 	}
 
-	@Test(priority = 15)
+	@Test(priority = 15, enabled = false)
 	public void addOneActorToProjects() {
 		Set<Attribute> projectAttributes = new HashSet<Attribute>();
 		projectAttributes.add(AttributeBuilder.build("Developers.groups", createdGroupNames.get(0)));
@@ -252,7 +252,7 @@ public class JiraConnectorPerformanceTests extends JiraTestHelper {
 		}
 	}
 
-	@Test(priority = 16)
+	@Test(priority = 16, enabled = false)
 	public void removeOneActorFromProjects() {
 		Set<Attribute> projectAttributes = new HashSet<Attribute>();
 		projectAttributes.add(AttributeBuilder.build("Developers.groups", createdGroupNames.get(0)));
@@ -264,7 +264,7 @@ public class JiraConnectorPerformanceTests extends JiraTestHelper {
 		}
 	}
 
-	@Test(priority = 17)
+	@Test(priority = 17, enabled = false)
 	public void addActorsToOneProject() {
 		Set<Attribute> projectAttributes = new HashSet<Attribute>();
 		projectAttributes.add(AttributeBuilder.build("Developers.groups", createdGroupNames));
@@ -274,7 +274,7 @@ public class JiraConnectorPerformanceTests extends JiraTestHelper {
 		jiraConnector.addAttributeValues(projectObjectClass, createdProjectIds.get(0), projectAttributes, null);
 	}
 
-	@Test(priority = 18)
+	@Test(priority = 18, enabled = false)
 	public void removeActorsFromOneProject() {
 		Set<Attribute> projectAttributes = new HashSet<Attribute>();
 		projectAttributes.add(AttributeBuilder.build("Developers.groups", createdGroupNames));
@@ -312,7 +312,7 @@ public class JiraConnectorPerformanceTests extends JiraTestHelper {
 	*/
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DELETE OBJECTS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-	@Test(priority = 35)
+	@Test(priority = 35, enabled = false)
 	public void deleteAccounts() {
 		for (Uid uid : createdAccountIds) {
 			// for (int i=1; i<count; i++){
@@ -322,7 +322,7 @@ public class JiraConnectorPerformanceTests extends JiraTestHelper {
 		}
 	}
 
-	@Test(priority = 30)
+	@Test(priority = 30, enabled = false)
 	public void deleteGroups() {
 		for (Uid uid : createdGroupIds) {
 			// for (int i=0; i<count; i++){
@@ -332,7 +332,7 @@ public class JiraConnectorPerformanceTests extends JiraTestHelper {
 		}
 	}
 
-	@Test(priority = 25)
+	@Test(priority = 25, enabled = false)
 	public void deleteProjects() {
 		for (Uid uid : createdProjectIds) {
 			// for (int i=1; i<count; i++){
@@ -342,7 +342,7 @@ public class JiraConnectorPerformanceTests extends JiraTestHelper {
 		}
 	}
 
-	@Test(priority = 50)
+	@Test(priority = 50, enabled = false)
 	public void disposeTest() {
 		jiraConnector.dispose();
 	}

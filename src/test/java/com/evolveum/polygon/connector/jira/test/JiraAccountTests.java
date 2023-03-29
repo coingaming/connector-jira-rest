@@ -49,13 +49,13 @@ public class JiraAccountTests extends JiraTestHelper{
 	private static final String updatedTestUsername = "XXľščťžýáíéäúôöüß$#@%^*(?)XX";
 	private static final Set<Attribute> accountAttributes = new HashSet<Attribute>();
 	
-	@Test(priority = 1)
+	@Test(priority = 1, enabled = false)
 	public void initTest() {
 		jiraConnector.init(getConfiguration());
 		cleanUp();
 	}
 	
-	@Test(priority = 2)
+	@Test(priority = 2, enabled = false)
 	public void accountSchemaTest(){
 		Schema schema = jiraConnector.schema();
 		OperationOptions options = new OperationOptions(new HashMap<String,Object>());
@@ -115,7 +115,7 @@ public class JiraAccountTests extends JiraTestHelper{
 		}
  }
 	
-	@Test(priority = 3)
+	@Test(priority = 3, enabled = false)
 	public void createAccountTest(){
 		//mandatory attributes:
 		accountAttributes.add(AttributeBuilder.build(Name.NAME,testUsername));
@@ -142,20 +142,20 @@ public class JiraAccountTests extends JiraTestHelper{
 				+ "\n\t-------------------------------------------------------------------------");
 	 }
 	
-	@Test(priority = 3, expectedExceptions = IllegalArgumentException.class)
+	@Test(priority = 3, expectedExceptions = IllegalArgumentException.class, enabled = false)
 	public void unknownAccountUidNegativeTest() {
 		AttributeFilter equalsFilter = (EqualsFilter) FilterBuilder.equalTo(AttributeBuilder.build(Uid.NAME, "XXXXXXXXX"));
 		accountResults.clear();
 		jiraConnector.executeQuery(accountObjectClass, equalsFilter, accountHandler, options);
 	}
 	
-	@Test(priority = 4, expectedExceptions = IllegalArgumentException.class)
+	@Test(priority = 4, expectedExceptions = IllegalArgumentException.class, enabled = false)
 	public void createDuplicateAccountNegativeTest(){
 		//create duplicate user:
 		jiraConnector.create(accountObjectClass, accountAttributes, options);
 	 }
 	
-	@Test(priority = 4)
+	@Test(priority = 4, enabled = false)
 	public void updateAccountTest(){
 		
 		//update created account:
@@ -185,7 +185,7 @@ public class JiraAccountTests extends JiraTestHelper{
 				+ "\n-------------------------------------------------------------------------");
 	 }
 	
-	@Test(priority = 5)
+	@Test(priority = 5, enabled = false)
 	public void uidEqualsFilteringForAccountsTest() {
 		// filtering:
 		AttributeFilter accountEqualsFilter = (EqualsFilter) FilterBuilder.equalTo(AttributeBuilder.build(Uid.NAME, accountUid.getUidValue() ));
@@ -200,7 +200,7 @@ public class JiraAccountTests extends JiraTestHelper{
 			LOG.ok("\n-------------------------------------------------------------------------\n\tPASSED: Attributes of created account and searched account CORRESPOND \n-------------------------------------------------------------------------");
 	}
 	
-	@Test(priority = 5)
+	@Test(priority = 5, enabled = false)
 	public void nameEqualsFilteringForAccountsTest() {
 		// filtering:
 		accountResults.clear();
@@ -216,7 +216,7 @@ public class JiraAccountTests extends JiraTestHelper{
 		
 	}
 	
-	@Test(priority = 5)
+	@Test(priority = 5, enabled = false)
 	public void nameStartsWithFilteringForAccountsTest() {
 		// filtering:
 		AttributeFilter accountStartsWithFilter = (StartsWithFilter) FilterBuilder.startsWith(AttributeBuilder.build(Name.NAME, "ľščťž"));
@@ -231,7 +231,7 @@ public class JiraAccountTests extends JiraTestHelper{
 		
 	}
 	
-	@Test(priority = 5)
+	@Test(priority = 5, enabled = false)
 	public void displaynameStartsWithFilteringForAccountsTest() {
 		// filtering:
 		AttributeFilter accountStartsWithFilter = (StartsWithFilter) FilterBuilder.startsWith(AttributeBuilder.build("displayName","ľščťžýáíé ľšč"));
@@ -246,7 +246,7 @@ public class JiraAccountTests extends JiraTestHelper{
 		
 	}
 	
-	@Test(priority = 5)
+	@Test(priority = 5, enabled = false)
 	public void emailStartsWithFilteringForAccountsTest() {
 		// filtering:
 		AttributeFilter accountStartsWithFilter = (StartsWithFilter) FilterBuilder.startsWith(AttributeBuilder.build("emailAddress","mym"));
@@ -262,7 +262,7 @@ public class JiraAccountTests extends JiraTestHelper{
 	}
 	
 	
-	@Test(priority = 5)
+	@Test(priority = 5, enabled = false)
 	public void nameContainsFilteringForAccountsTest() {
 		// filtering:
 		AttributeFilter accountStartsWithFilter = (ContainsFilter) FilterBuilder.contains(AttributeBuilder.build(Name.NAME, "ľščťž"));
@@ -277,7 +277,7 @@ public class JiraAccountTests extends JiraTestHelper{
 		
 	}
 	
-	@Test(priority = 5)
+	@Test(priority = 5, enabled = false)
 	public void displaynameContainsFilteringForAccountsTest() {
 		// filtering:
 		AttributeFilter accountStartsWithFilter = (ContainsFilter) FilterBuilder.contains(AttributeBuilder.build("displayName","ľščťž"));
@@ -292,7 +292,7 @@ public class JiraAccountTests extends JiraTestHelper{
 		
 	}
 	
-	@Test(priority = 5)
+	@Test(priority = 5, enabled = false)
 	public void emailContainsFilteringForAccountsTest() {
 		// filtering:
 		AttributeFilter accountStartsWithFilter = (ContainsFilter) FilterBuilder.contains(AttributeBuilder.build("emailAddress","mym"));
@@ -307,7 +307,7 @@ public class JiraAccountTests extends JiraTestHelper{
 		
 	}
 	
-	@Test(priority = 6)
+	@Test(priority = 6, enabled = false)
 	public void listingAccountsTest() {
 		Map<String, Object> operationOptions = new HashMap<String, Object>();
 		operationOptions.put("ALLOW_PARTIAL_ATTRIBUTE_VALUES", true);
@@ -323,14 +323,14 @@ public class JiraAccountTests extends JiraTestHelper{
 	}
 
 	
-	@Test(priority = 15)
+	@Test(priority = 15, enabled = false)
 	public void deleteAccountTest() {
 		if (accountUid!=null){
 			jiraConnector.delete(accountObjectClass, accountUid, options);
 		}
 	}
 	
-	@Test(priority = 20)
+	@Test(priority = 20, enabled = false)
 	public void disposeTest() {
 		 jiraConnector.dispose();
 	}

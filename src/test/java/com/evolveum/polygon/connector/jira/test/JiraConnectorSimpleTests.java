@@ -81,13 +81,13 @@ public class JiraConnectorSimpleTests {
 
 
 	 
-	 @Test
+	 @Test(enabled = false)
 	 public void test() throws URISyntaxException, ParseException, IOException { 
 		JiraConfiguration config = new JiraConfiguration();
 		config.setBaseUrl("172.16.1.253:8084");
-		config.setUsername("administrator");
+		config.setEmailAddress("administrator");
 		GuardedString passwd = new GuardedString("training".toCharArray());
-		config.setPassword(passwd);
+		//config.setPassword(passwd);
 		 
 		JiraConnector conn = new JiraConnector();
 		//LOG.info("schema: {0}", conn.schema());

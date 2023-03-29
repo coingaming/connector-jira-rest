@@ -84,6 +84,8 @@ public class JiraObjectsProcessing {
 
 	static final String URI_BASE_PATH = "/rest/api/2";
 	static final String URI_USER_PATH = "/user";
+	static final String URI_USERS_PATH = "/users";
+	static final String URI_MYSELF_PATH = "/myself";
 	static final String URI_SEARCH_PATH = "/search";
 	static final String PARAM_USERNAME = "username";
 	static final String PARAM_START_AT = "startAt";
@@ -102,7 +104,7 @@ public class JiraObjectsProcessing {
 	static final String URI_PROJECT_PATH = "/project";
 
 	static final String PARAM_FILENAME = "filename";
-	static final String PARAM_KEY = "key";
+	static final String PARAM_ACCOUNT_ID = "accountId";
 	static final String CONTENT_TYPE_JPEG_IMAGE = "image/jpeg";
 	static final String UID = "key";
 
@@ -117,6 +119,7 @@ public class JiraObjectsProcessing {
 	static final String ATTR_ADMINISTRATORS = "Administrators";
 
 	// user+project:
+	static final String ATTR_ACCOUNT_ID = "accountId";
 	static final String ATTR_KEY = "key";
 	static final String ATTR_AVATAR_BYTE_ARRRAY = "binaryAvatar";
 	// user+group:
@@ -179,7 +182,7 @@ public class JiraObjectsProcessing {
 		// don't log request here - password field !!!
 		//CloseableHttpResponse response = null;
 		LOG.ok("request URI: {0}", request.getURI());
-		request.addHeader("Content-Type", contentType);
+		request.addHeader("Accept", contentType);
 		request.addHeader("Authorization", "Basic " + authEncoding());
 		try (CloseableHttpResponse response = execute(request)){
 			
@@ -231,18 +234,18 @@ public class JiraObjectsProcessing {
 	}
 
 	String authEncoding() {
-		String username = configuration.getUsername();
-		String password = configuration.getStringPassword();
+		String username = configuration.getEmailAddress();;
+		String accessToken = configuration.getAccessTokenPlainText();
 		if (username == null || username.equals("")) {
 			LOG.error("Authentication failed: Username is not provided.");
 			throw new InvalidCredentialException("Authentication failed: Username is not provided.");
 		}
-		if (password == null || password.equals("")) {
+		if (accessToken == null || accessToken.equals("")) {
 			LOG.error("Authentication failed: Password is not provided.");
-			throw new InvalidPasswordException("Authentication failed: Password is not provided.");
+			throw new InvalidPasswordException("Authentication failed: Pass                                                                                                                                         word is not provided.");
 		}
 		StringBuilder nameAndPasswd = new StringBuilder();
-		nameAndPasswd.append(username).append(":").append(password);
+		nameAndPasswd.append(username).append(":").append(accessToken);
 		// String nameAndPasswd = "administrator:training"
 		String encoding = Base64.encodeBase64String(nameAndPasswd.toString().getBytes());
 		return encoding;
@@ -736,7 +739,7 @@ public class JiraObjectsProcessing {
 				}
 				if (objectName.equals(USER_NAME)) {
 					getUri.setPath(URI_BASE_PATH + URI_USER_PATH);
-					getUri.addParameter(PARAM_KEY, uid);
+					getUri.addParameter(PARAM_ACCOUNT_ID, uid);
 				}
 
 				HttpGet request = new HttpGet(getUri.build());
@@ -843,7 +846,7 @@ public class JiraObjectsProcessing {
 				OutputStream outputJPEGstream = new ByteArrayOutputStream();
 				TranscoderOutput outputJPEGimage = new TranscoderOutput(outputJPEGstream);
 				JPEGTranscoder SVGtoJPEGconverter = new JPEGTranscoder();
-				SVGtoJPEGconverter.addTranscodingHint(JPEGTranscoder.KEY_QUALITY, new Float(1));
+				SVGtoJPEGconverter.addTranscodingHint(JPEGTranscoder.KEY_QUALITY, 1f);
 				try {
 					SVGtoJPEGconverter.transcode(inputSVGimage, outputJPEGimage);
 					result = ((ByteArrayOutputStream) outputJPEGstream).toByteArray();
@@ -1095,8 +1098,7 @@ public class JiraObjectsProcessing {
 		URIBuilder getUri = null;
 		try {
 			getUri = getURIBuilder();
-			getUri.setPath(URI_BASE_PATH + URI_USER_PATH);
-			getUri.addParameter(PARAM_USERNAME, name);
+			getUri.setPath(URI_BASE_PATH + URI_MYSELF_PATH);
 			request = new HttpGet(getUri.build());
 			callRequest(request, true, CONTENT_TYPE_JSON);
 		} catch (URISyntaxException e) {

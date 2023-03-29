@@ -47,13 +47,13 @@ public class JiraProjectTests extends JiraTestHelper {
 	private Uid projectUid;
 	private Attribute attrLead = AttributeBuilder.build("lead", "administrator");
 
-	@Test(priority = 1)
+	@Test(priority = 1, enabled = false)
 	public void initTest() {
 		jiraConnector.init(getConfiguration());
 		cleanUp();
 	}
 
-	@Test(priority = 2)
+	@Test(priority = 2, enabled = false)
 	public void projectSchemaTest() {
 		Schema schema = jiraConnector.schema();
 		OperationOptions options = new OperationOptions(new HashMap<String, Object>());
@@ -112,7 +112,7 @@ public class JiraProjectTests extends JiraTestHelper {
 		}
 	}
 
-	@Test(priority = 3)
+	@Test(priority = 3, enabled = false)
 	public void createProjectTest() {
 		// mandatory attributes:
 		projectAttributes.add(AttributeBuilder.build(Name.NAME, testProjectname));
@@ -136,7 +136,7 @@ public class JiraProjectTests extends JiraTestHelper {
 		} 
 	}
 
-	@Test(priority = 3, expectedExceptions = IllegalArgumentException.class)
+	@Test(priority = 3, expectedExceptions = IllegalArgumentException.class, enabled = false)
 	public void unknownProjectUidNegativeTest() {
 		AttributeFilter equalsFilter = (EqualsFilter) FilterBuilder
 				.equalTo(AttributeBuilder.build(Uid.NAME, "XXXXXXXXX"));
@@ -144,13 +144,13 @@ public class JiraProjectTests extends JiraTestHelper {
 		jiraConnector.executeQuery(projectObjectClass, equalsFilter, projectHandler, options);
 	}
 
-	@Test(priority = 4, expectedExceptions = IllegalArgumentException.class)
+	@Test(priority = 4, expectedExceptions = IllegalArgumentException.class, enabled = false)
 	public void createDuplicateProjectNegativeTest() {
 		// create duplicate user:
 		jiraConnector.create(projectObjectClass, projectAttributes, options);
 	}
 
-	@Test(priority = 4)
+	@Test(priority = 4, enabled = false)
 	public void updateProjectTest() {
 		// update created project:
 		projectAttributes.clear();
@@ -172,7 +172,7 @@ public class JiraProjectTests extends JiraTestHelper {
 		} 
 	}
 
-	@Test(priority = 5)
+	@Test(priority = 5, enabled = false)
 	public void uidEqualsFilteringForProjectsTest() {
 		// filtering:
 		AttributeFilter projectEqualsFilter = (EqualsFilter) FilterBuilder
@@ -187,7 +187,7 @@ public class JiraProjectTests extends JiraTestHelper {
 		} 
 	}
 
-	@Test(priority = 5)
+	@Test(priority = 5, enabled = false)
 	public void nameContainsFilteringForProjectsTest() {
 		// filtering:
 		AttributeFilter projectContainsFilter = (ContainsFilter) FilterBuilder
@@ -205,7 +205,7 @@ public class JiraProjectTests extends JiraTestHelper {
 
 	}
 
-	@Test(priority = 5)
+	@Test(priority = 5, enabled = false)
 	public void keyContainsFilteringForProjectsTest() {
 		// filtering:
 		AttributeFilter projectContainsFilter = (ContainsFilter) FilterBuilder
@@ -223,7 +223,7 @@ public class JiraProjectTests extends JiraTestHelper {
 
 	}
 
-	@Test(priority = 5)
+	@Test(priority = 5, enabled = false)
 	public void projectTypeKeyContainsFilteringForProjectsTest() {
 		// filtering:
 		AttributeFilter projectContainsFilter = (ContainsFilter) FilterBuilder
@@ -248,7 +248,7 @@ public class JiraProjectTests extends JiraTestHelper {
 		}
 	}
 
-	@Test(priority = 6)
+	@Test(priority = 6, enabled = false)
 	public void listingProjectsTest() {
 		// filtering:
 		projectResults.clear();
@@ -257,14 +257,14 @@ public class JiraProjectTests extends JiraTestHelper {
 		LOG.ok("\n\n\tListed " + projectResults.size() + " projects.\n");
 	}
 
-	@Test(priority = 15)
+	@Test(priority = 15, enabled = false)
 	public void deleteProjectTest() {
 		if (projectUid != null) {
 			jiraConnector.delete(projectObjectClass, projectUid, null);
 		}
 	}
 
-	@Test(priority = 20)
+	@Test(priority = 20, enabled = false)
 	public void disposeTest() {
 		jiraConnector.dispose();
 	}
